@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { connectDB } from "../../../utils/db";
+import connectDB from "../../../utils/db";
 import { registerTeacher } from "@/controllers/teacherController";
-export default async function hander(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {

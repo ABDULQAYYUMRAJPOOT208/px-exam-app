@@ -5,27 +5,52 @@ import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
 const SignInForm = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   const router = useRouter();
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!email || !password) {
       toast.error("Please enter required email or password");
+      return;
     }
+
     try {
       const response = await axios.post("/api/auth/sign-in-teacher", {
         email,
         password,
       });
-      if (response.status == 200) {
-        toast.success("Teacher have signed in successfully");
+
+      if (response.status === 200) {
+        // Store email in localStorage
+        localStorage.setItem("teacherEmail", email);
+
+        toast.success("Teacher signed in successfully");
+
+        // Fetch exam codes after successful sign-in
+        fetchExamCodes(email);
+
+        // Redirect to /exams page after sign-in
         router.push("/exams");
       }
-    } catch (e) {
+    } catch (error) {
       toast.error("Invalid email or password");
+    }
+  };
+
+  const fetchExamCodes = async (teacherEmail: string) => {
+    try {
+      const response = await axios.get(`/api/exam?email=${teacherEmail}`);
+      if (response.status === 200) {
+        // Handle fetched exam codes here, e.g., store them in state or context
+        const examCodes = response.data.examCodes;
+        console.log("Fetched exam codes:", examCodes);
+      }
+    } catch (error) {
+      toast.error("Failed to fetch exam codes");
     }
   };
 
@@ -39,7 +64,7 @@ const SignInForm = () => {
       </div>
 
       <form
-        className=" bg-white dark:bg-zinc-900 shadow-2xl rounded-2xl overflow-hidden border-4 border-red-400 dark:border-red-800 mt-10 max-w-[80%]"
+        className="bg-white dark:bg-zinc-900 shadow-2xl rounded-2xl overflow-hidden border-4 border-red-400 dark:border-red-800 mt-10 max-w-[80%]"
         onSubmit={handleSubmit}
       >
         <div className="px-8 py-10 md:px-10">
@@ -83,7 +108,8 @@ const SignInForm = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <div className="mt-10 w-full flex ">
+
+            <div className="mt-10 w-full flex">
               <button
                 className="mx-auto w-full tracking-wide text-white transition-colors duration-200 transform bg-gradient-to-r from-red-600 to-orange-600 rounded-lg hover:from-red-700 hover:to-orange-700 focus:outline-none focus:ring-4 focus:ring-red-400 dark:focus:ring-red-800"
                 type="submit"

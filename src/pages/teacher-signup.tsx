@@ -85,8 +85,8 @@ const SignUpForm = () => {
               <input
                 placeholder="you@example.com"
                 className="block w-full px-4 py-3 mt-2 text-zinc-800 bg-white border-2 rounded-lg dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 focus:border-red-500 dark:focus:border-red-400 focus:ring-opacity-50 focus:outline-none focus:ring focus:ring-red-400"
-                name="email"
-                id="email"
+                name="name"
+                id="name"
                 type="text"
                 onChange={(e) => setName(e.target.value)}
               />

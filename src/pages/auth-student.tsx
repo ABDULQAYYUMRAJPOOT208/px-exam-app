@@ -13,8 +13,9 @@ const SignUpForm = () => {
       toast.error("Please fill all required fields");
       return;
     }
-    
+
     console.log(email, code, roll);
+    debugger;
     await axios
       .post("http://localhost:3000/api/auth/register-student", {
         email,
@@ -26,14 +27,18 @@ const SignUpForm = () => {
         setEmail("");
         setCode("");
         setRoll("");
-        if(response.status === 201)
-        {
-          window.location.href = "/"
+        if (response.status === 201) {
         }
+        window.location.href = `/exam-attemp?email=${email}&rollNumber=${roll}&examCode=${code}`;
+
       })
       .catch((error) => {
+
         if (axios.isAxiosError(error) && error.response?.status === 409) {
           toast.error("Email already exists");
+          window.location.href = `/exam-attemp?email=${email}&rollNumber=${roll}&examCode=${code}`;
+
+          // window.location.href = "/exam-attemp"
         } else if (
           axios.isAxiosError(error) &&
           error.response?.status === 400
