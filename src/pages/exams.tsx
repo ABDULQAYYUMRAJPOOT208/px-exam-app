@@ -5,6 +5,7 @@ import { IQuestionProps } from "@/interfaces/interfaces";
 import Subjective from "@/components/Subjective";
 import Objective from "@/components/Objective";
 import { v4 } from 'uuid'
+import { useRouter } from 'next/router';
 
 const Exam = () => {
   const [code, setCode] = useState<String | null>(null);
@@ -71,18 +72,18 @@ const Exam = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setExamType(tempstate);
-    if (tempstate === "") {
-      toast.error("Please choose exam type from dropdown in choose exam type section", {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      return;
-    }
+    // if (tempstate === "") {
+    //   toast.error("Please choose exam type from dropdown in choose exam type section", {
+    //     position: "top-center",
+    //     autoClose: 3000,
+    //     hideProgressBar: false,
+    //     closeOnClick: true,
+    //     pauseOnHover: true,
+    //     draggable: true,
+    //     progress: undefined,
+    //   });
+    //   return;
+    // }
 
     const newCode = generateRandomCode(8);
     setCode(newCode);
@@ -165,6 +166,12 @@ const Exam = () => {
     }
   }, [email]);
 
+
+  const router = useRouter();
+  const goToNotifyPage = () => router.push('/teacher-notify-portal');
+
+
+
   return (
     <>
       <ToastContainer />
@@ -186,7 +193,7 @@ const Exam = () => {
           className="bg-zinc-800 p-4 my-10 rounded-lg justify-center flex flex-col min-w-80"
           onSubmit={handleSubmit}
         >
-          <label className="text-white text-sm">Choose the exam type</label>
+          {/* <label className="text-white text-sm">Choose the exam type</label>
           <div className="relative mt-2 max-w-xs text-gray-500">
             <div className="absolute inset-y-0 left-3 my-auto h-6 flex items-center border-r pr-2">
               <select
@@ -207,7 +214,7 @@ const Exam = () => {
               className="w-full pl-[8rem] pr-3 py-2 appearance-none bg-transparent outline-none border focus:border-slate-600 shadow-sm rounded-lg text-white"
               onChange={(e) => setNumber(parseInt(e.target.value))}
             />
-          </div>
+          </div> */}
           <button className="mt-10 bg-red-600 p-2 rounded-lg" id="createNow" type="submit">
             Create Now!
           </button>
@@ -269,6 +276,14 @@ const Exam = () => {
           <button className="hover:bg-green-800" onClick={handleAddObjective}>Add Objective</button>
         </div>
       )}
+
+      <button
+        onClick={goToNotifyPage}
+        className="fixed bottom-10 right-10 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 focus:outline-none"
+      >
+        <span className="text-2xl">🔔</span> {/* Notification icon */}
+      </button>
+
     </>
   );
 };

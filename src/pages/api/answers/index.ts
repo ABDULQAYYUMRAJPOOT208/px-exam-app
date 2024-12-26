@@ -15,12 +15,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(400).json({ message: "All fields are required" });
         }
 
-        // Save answers to the database
-        const answerEntry = new Answer({
-            examCode,
-            studentId,
-            answers,
-        });
+        // Find existing answer entry for the student and exam
+        let answerEntry = await Answer.findOne({ examCode, studentId });
+
+        // If an entry exists, overwrite the answers
+        if (answerEntry) {
+            answerEntry.answers = answers;
+        } else {
+            // If no entry exists, create a new one
+            answerEntry = new Answer({
+                examCode,
+                studentId,
+                answers,
+            });
+        }
+
+        // Save the answer entry
         await answerEntry.save();
 
         res.status(201).json({ message: "Answers submitted successfully" });
